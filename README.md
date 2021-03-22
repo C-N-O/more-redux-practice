@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# I am using this App to learn react-redux
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+I have 3 components: Apples, Oranges, Mangoes
 
-## Available Scripts
+By default I have 50 Apples, 30 Oranges, and 80 Mangoes
 
-In the project directory, you can run:
+Each will have their components and have them all displayed on the screen. Each component, with have an increment and decrement button
 
-### `npm start`
+# Steps to setting up Redux with my React App
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+npm install redux react-redux
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# inside the Projects index.js
 
-### `npm test`
+import { createStore } from 'redux'; // This is in the index.js file of the Project
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# actions
 
-### `npm run build`
+create a folder 'actions' and create an index.js file and add and export all the actions needed by the App
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# reducers
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+create a reducer folder that has an index.js and all the reducer files needed, and export default each file
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# combine Reducers
 
-### `npm run eject`
+since we have multiple reducers, we need to combine them, and we use combineReducers. In the reducers folder in the index.js file,
+import {combineReducers} from 'redux'
+import all the reducers in the reducers folder;
+combine all the reducers and store in a variable
+export default the variable
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# import the combined reducers
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+import allReducers into the projects index.js like
+import allReducers from './reducers'
+We do not need the './reducers/index' because Webpack will automatically look into the index.js file
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# we create a store
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+const store = createStore(allReducers);
 
-## Learn More
+# optional
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+we can add
+window.**REDUX_DEVTOOLS_EXTENSION** && window.**REDUX_DEVTOOLS_EXTENSION**()
+as the second argument to createStore. This will allow us see our various states in the redux dev tools
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# connect the store to our React App
 
-### Code Splitting
+We do this by importing Provider from 'react-redux'
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+import {Provider} from 'react-redux
 
-### Analyzing the Bundle Size
+# wrap the Provider around our App and pass the store as props
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+<Provider store={store}>
+    <App />
+    </Provider>
 
-### Making a Progressive Web App
+# In any component, you can get access to any piece of state that you want
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The Provider allows all components have access to the store
+In the component import {useSelector, useDispatch} from 'react-redux'. This is a pair of custom React hooks that allow your React components to interact with the Redux store.
+In the component, you can then get access to the specific state relevant to that component
 
-### Advanced Configuration
+For exmaple, the Apple's component needs the apples state
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+const myApple = useSelector(state => state.countApple)
 
-### Deployment
+# import the action that the component needs
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+For the apple component
+import { incrementApples, decrementApples } from '../actions';
 
-### `npm run build` fails to minify
+# create a dispatch variable
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+const dispatch = useDispatch();
+
+# on button click, increment or decrement the state
+
+onClick={() => dispatch(decrementApples())
+onClick={() => dispatch(incrementApples())
